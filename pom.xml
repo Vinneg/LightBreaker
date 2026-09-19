@@ -65,7 +65,7 @@
 
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>vinneg.lightbreaker/vinneg.lightbreaker.App</mainClass>
+                            <mainClass>vinneg.lightbreaker/vinneg.lightbreaker.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
