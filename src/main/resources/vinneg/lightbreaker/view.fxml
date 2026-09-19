@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="vinneg.lightbreaker.Controller">
+    <padding>
+        <Insets bottom="0.0" left="20.0" right="20.0" top="0.0"/>
+    </padding>
+
+    <ToggleButton fx:id="startToggle" text="START" onAction="#onStartToggleAction" prefWidth="120.0" prefHeight="30.0"/>
+    <ToggleButton fx:id="aimToggle" text="AIM" onAction="#onAimToggleAction" prefWidth="120.0" prefHeight="30.0"/>
+</VBox>
