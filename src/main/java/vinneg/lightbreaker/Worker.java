@@ -34,11 +34,13 @@ public class Worker implements Runnable {
             Color cc = robot.getPixelColor(cp.x, cp.y);
 
             if (hc.getRed() < 200 && cc.getRed() > 200) {
-                System.out.println(LocalDateTime.now() + ", health = " + hc.getRed() + ", cast = " + cc.getRed());
+//                System.out.println(LocalDateTime.now() + ", health = " + hc.getRed() + ", cast = " + cc.getRed());
 
                 robot.keyPress(VK_ESCAPE);
                 robot.delay(ThreadLocalRandom.current().nextInt(2, 5));
                 robot.keyRelease(VK_ESCAPE);
+
+                robot.delay(ThreadLocalRandom.current().nextInt(300, 350));
             }
         }
     }

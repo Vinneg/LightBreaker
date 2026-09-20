@@ -2,6 +2,8 @@ package vinneg.lightbreaker;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -11,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.security.NoSuchAlgorithmException;
 
 import static java.awt.event.KeyEvent.VK_ALT;
@@ -24,19 +25,8 @@ public class Main extends Application {
     private Robot robot;
 
     @Override
-    public void start(Stage mainStage) throws AWTException {
+    public void start(Stage main) throws AWTException {
         Robot robot = new Robot();
-
-        // Заголовок окна
-        mainStage.setAlwaysOnTop(true);
-        mainStage.setTitle("Li-Br");
-        mainStage.initStyle(StageStyle.UTILITY);
-        mainStage.setX(440);
-        mainStage.setY(90);
-
-        // Создаём контейнер для элементов (вертикальная компоновка)
-        VBox root = new VBox(10); // 10 — отступ между элементами
-        root.setStyle("-fx-padding: 5; -fx-background-color: #f0f0f0;");
 
         Pane aimRoot = new Pane();
         aimRoot.setStyle("-fx-border-color: black; -fx-border-width: 1;");
@@ -44,37 +34,38 @@ public class Main extends Application {
         Circle dot2 = new Circle(14, 41, 3, Color.BLACK);
         aimRoot.getChildren().addAll(dot1, dot2);
 
-        // Дополнительное окно (создаём заранее, но не показываем)
-        Stage aimStage = new Stage(StageStyle.UNDECORATED);
-        aimStage.setTitle("Aim");
-        aimStage.setScene(new Scene(aimRoot, 27, 54));
-        aimStage.setAlwaysOnTop(true);
-        aimStage.setX(400);
-        aimStage.setY(120);
-        aimStage.setOpacity(0.3);
+        Stage slave = new Stage(StageStyle.UNDECORATED);
+        slave.setTitle("Aim");
+        slave.setScene(new Scene(aimRoot, 27, 54));
+        slave.setAlwaysOnTop(true);
+        slave.setX(400);
+        slave.setY(120);
+        slave.setOpacity(0.3);
 
         aimRoot.setOnMousePressed(e -> {
-            dragOffsetX = e.getScreenX() - aimStage.getX();
-            dragOffsetY = e.getScreenY() - aimStage.getY();
+            dragOffsetX = e.getScreenX() - slave.getX();
+            dragOffsetY = e.getScreenY() - slave.getY();
         });
         aimRoot.setOnMouseDragged(e -> {
-            aimStage.setX(e.getScreenX() - dragOffsetX);
-            aimStage.setY(e.getScreenY() - dragOffsetY);
+            slave.setX(e.getScreenX() - dragOffsetX);
+            slave.setY(e.getScreenY() - dragOffsetY);
         });
 
-        ToggleButton startButton = new ToggleButton("START");
-        startButton.setPrefSize(60, 40);
-        startButton.setOnAction(event -> {
-            if (startButton.isSelected()) {
-                // При первом нажатии — открываем окно
-                startButton.setText("STOP");
+        VBox root = new VBox(10);
 
-                int hx = (int) aimStage.getX() + 13;
-                int hy = (int) aimStage.getY() + 13;
-                int cx = (int) aimStage.getX() + 13;
-                int cy = (int) aimStage.getY() + 41;
+        javafx.scene.control.Label title = new Label("Li-Br");
+        title.setPrefSize(80, 20);
 
-                System.out.println("health " + hx + "-" + hy + " cast " + cx + "-" + cy);
+        ToggleButton start = new ToggleButton("START");
+        start.setPrefSize(80, 40);
+        start.setOnAction(_ -> {
+            if (start.isSelected()) {
+                start.setText("STOP");
+
+                int hx = (int) slave.getX() + 13;
+                int hy = (int) slave.getY() + 13;
+                int cx = (int) slave.getX() + 13;
+                int cy = (int) slave.getY() + 41;
 
                 try {
                     Worker.start(hx, hy, cx, cy);
@@ -86,7 +77,7 @@ public class Main extends Application {
                 robot.keyRelease(VK_TAB);
                 robot.keyRelease(VK_ALT);
             } else {
-                startButton.setText("START");
+                start.setText("START");
 
                 Worker.stop();
 
@@ -97,35 +88,44 @@ public class Main extends Application {
             }
         });
 
-        mainStage.setOnCloseRequest(e -> {
-            aimStage.close();
-            Worker.stop();
-        });
-
-        // Создаём toggle‑кнопку для управления дополнительным окном
-        ToggleButton aimButton = new ToggleButton("AIM");
-        aimButton.setPrefSize(60, 30);
-        aimButton.setOnAction(event -> {
-            if (aimButton.isSelected()) {
-                aimStage.show();
+        ToggleButton aim = new ToggleButton("AIM");
+        aim.setPrefSize(80, 20);
+        aim.setOnAction(_ -> {
+            if (aim.isSelected()) {
+                slave.show();
             } else {
-                aimStage.hide();
+                slave.hide();
             }
         });
 
-        aimStage.setOnHidden(e -> aimButton.setSelected(false));
+        Button close = new Button("close");
+        close.setPrefSize(80, 20);
+        close.setOnAction(_ -> {
+            slave.close();
+            main.close();
+            Worker.stop();
+        });
 
-        // Добавляем кнопки в контейнер
-        root.getChildren().addAll(startButton, aimButton);
+        slave.setOnHidden(_ -> aim.setSelected(false));
 
-        // Создаём сцену с контейнером
+        root.getChildren().addAll(title, start, aim, close);
+
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
-        // Устанавливаем сцену в окно
-        mainStage.setScene(scene);
+        main.initStyle(StageStyle.UNDECORATED);
+        main.setAlwaysOnTop(true);
+        main.setResizable(false);
+        main.setX(440);
+        main.setY(90);
+        main.setScene(scene);
 
-        // Показываем окно
-        mainStage.show();
+        main.setOnCloseRequest(_ -> {
+            slave.close();
+            Worker.stop();
+        });
+
+        main.show();
     }
 
     static void main(String[] args) {
