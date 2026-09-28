@@ -1,9 +1,7 @@
 package vinneg.lightbreaker;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,17 +28,20 @@ public class Worker implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
 //            robot.delay(5);
 
-            Color hc = robot.getPixelColor(hp.x, hp.y);
             Color cc = robot.getPixelColor(cp.x, cp.y);
 
-            if (hc.getRed() < 200 && cc.getRed() > 200) {
-//                System.out.println(LocalDateTime.now() + ", health = " + hc.getRed() + ", cast = " + cc.getRed());
+            if (cc.getRed() > 200) {
+                Color hc = robot.getPixelColor(hp.x, hp.y);
 
-                robot.keyPress(VK_ESCAPE);
-                robot.delay(ThreadLocalRandom.current().nextInt(2, 5));
-                robot.keyRelease(VK_ESCAPE);
+                if (hc.getRed() < 200) {
+//                    System.out.println(LocalDateTime.now() + ", health = " + hc.getRed() + ", cast = " + cc.getRed());
 
-                robot.delay(ThreadLocalRandom.current().nextInt(300, 350));
+                    robot.keyPress(VK_ESCAPE);
+                    robot.delay(ThreadLocalRandom.current().nextInt(2, 5));
+                    robot.keyRelease(VK_ESCAPE);
+
+                    robot.delay(ThreadLocalRandom.current().nextInt(300, 350));
+                }
             }
         }
     }

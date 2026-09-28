@@ -22,7 +22,6 @@ public class Main extends Application {
 
     private double dragOffsetX;
     private double dragOffsetY;
-    private Robot robot;
 
     @Override
     public void start(Stage main) throws AWTException {
