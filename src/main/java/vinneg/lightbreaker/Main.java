@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -17,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static java.awt.event.KeyEvent.VK_ALT;
 import static java.awt.event.KeyEvent.VK_TAB;
+import static javafx.scene.paint.Color.BLACK;
 
 public class Main extends Application {
 
@@ -29,8 +29,8 @@ public class Main extends Application {
 
         Pane aimRoot = new Pane();
         aimRoot.setStyle("-fx-border-color: black; -fx-border-width: 1;");
-        Circle dot1 = new Circle(13, 13, 3, javafx.scene.paint.Color.BLACK);
-        Circle dot2 = new Circle(14, 41, 3, Color.BLACK);
+        Circle dot1 = new Circle(13, 13, 3, BLACK);
+        Circle dot2 = new Circle(14, 41, 3, BLACK);
         aimRoot.getChildren().addAll(dot1, dot2);
 
         Stage slave = new Stage(StageStyle.UNDECORATED);
